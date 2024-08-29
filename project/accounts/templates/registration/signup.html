@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Sign Up</h3>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Nome" name="name">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Nome de usuário" name="username">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                </div>
+                <input type="email" class="form-control" placeholder="Email" name="email">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                </div>
+                <input type="password" class="form-control" placeholder="Senha" name="password1">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                </div>
+                <input type="password" class="form-control" placeholder="Confirme a senha" name="password2">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </form>
+        <div id="password-feedback"></div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var password1 = document.querySelector('input[name="password1"]');
+        var password2 = document.querySelector('input[name="password2"]');
+        var feedback = document.getElementById('password-feedback');
+
+        function checkPasswords() {
+            if (password1.value === password2.value) {
+                feedback.textContent = 'As senhas estão iguais!';
+                feedback.style.color = 'green';
+            } else {
+                feedback.textContent = 'As senhas não coincidem!';
+                feedback.style.color = 'red';
+            }
+        }
+        password1.addEventListener('input', checkPasswords);
+        password2.addEventListener('input', checkPasswords);
+    });
+</script>
+{% endblock %}

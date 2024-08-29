@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Perfil do Usuário</h3>
+    </div>
+    <div class="card-body">
+        <p><strong>Nome de Usuário:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <a href="{% url 'accounts:password_change' %}" class="btn btn-warning">Alterar Senha</a>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+</div>
+{% endblock %}

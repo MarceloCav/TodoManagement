@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Tarefas - Lize Test
+{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Tarefas</h3>
+    </div>
+    <div class="card-body">
+      <div class="alert alert-info" role="alert">
+        Marque as tarefas como concluídas clicando no checkbox.
+      </div>
+      <a href="{% url 'todo:task_create' %}" class="btn btn-success mb-3">Criar nova tarefa</a>
+      <ul class="list-group">
+        {% for task in tasks %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="icheck-primary d-inline">
+                <input type="checkbox" class="toggle-complete" id="task_{{ task.id }}" data-task-id="{{ task.id }}" {% if task.completed %}checked{% endif %}>
+                <label for="task_{{ task.id }}">{{ task.title }}</label>
+              </div>
+            </div>
+            <div>
+              <a href="{% url 'todo:task_edit' task.pk %}" class="btn btn-sm btn-outline-primary mr-2">Editar</a>
+              {% if not task.completed %}
+                <a href="{% url 'todo:task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">Apagar</a>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="pagination mt-3">
+      <span class="step-links">
+        {% if tasks.has_previous %}
+          <a href="?page=1" class="btn btn-light">&laquo; Primeira</a>
+          <a href="?page={{ tasks.previous_page_number }}" class="btn btn-light">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+          Página {{ tasks.number }} de {{ tasks.paginator.num_pages }}.
+        </span>
+
+        {% if tasks.has_next %}
+          <a href="?page={{ tasks.next_page_number }}" class="btn btn-light">Próxima</a>
+          <a href="?page={{ tasks.paginator.num_pages }}" class="btn btn-light">Última &raquo;</a>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.toggle-complete').forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        const taskId = this.getAttribute('data-task-id');
+        const completed = this.checked;
+
+        fetch(`/api/tasks/${taskId}/toggle_complete/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ completed: completed })
+        }).then(response => response.json()).then(data => {
+          console.log(data);
+        });
+      });
+    });
+  </script>
+{% endblock %}
